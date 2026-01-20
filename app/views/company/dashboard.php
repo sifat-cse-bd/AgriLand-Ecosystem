@@ -20,6 +20,11 @@
         <a href="#my-instruments">My Instruments</a>
         <a href="#orders">Orders</a>
         <a href="index.php?url=logout" class="btn-logout">Logout</a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <span class="toggle-icon" id="themeIcon">🌙</span>
+            <span class="toggle-text" id="themeText">Dark</span>
+        </button>
+
     </div>
 </nav>
 
@@ -284,6 +289,40 @@
         }
     }
 </script>
+
+// dark and light theme switch
+<script>
+  (function () {
+    const root = document.documentElement;
+    const btn = document.getElementById("themeToggle");
+    const icon = document.getElementById("themeIcon");
+    const text = document.getElementById("themeText");
+
+    // Load saved theme (default dark)
+    const saved = localStorage.getItem("theme") || "dark";
+    setTheme(saved);
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") === "light" ? "light" : "dark";
+      const next = current === "light" ? "dark" : "light";
+      setTheme(next);
+      localStorage.setItem("theme", next);
+    });
+
+    function setTheme(mode) {
+      if (mode === "light") {
+        root.setAttribute("data-theme", "light");
+        icon.textContent = "☀️";
+        text.textContent = "Light";
+      } else {
+        root.removeAttribute("data-theme");
+        icon.textContent = "🌙";
+        text.textContent = "Dark";
+      }
+    }
+  })();
+</script>
+
 
 </body>
 </html>
