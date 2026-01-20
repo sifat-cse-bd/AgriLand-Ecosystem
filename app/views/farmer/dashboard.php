@@ -645,6 +645,29 @@
                 width: 100%;
             }
         }
+        .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:999;
+}
+.modal-box{
+    background:#fff;
+    border-radius:16px;
+    padding:24px;
+    max-width:420px;
+    width:90%;
+}
+.modal-actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:20px;
+}
+
     </style>
 </head>
 <body>
@@ -697,12 +720,10 @@
             <div class="alert-content">
                 <div class="alert-title">Status: Currently Busy</div>
                 <p class="alert-text">You won't appear in the available farmers list until you complete your current task.</p>
-                <a href="index.php?url=set_available" class="alert-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
-                    Set as Available
-                </a>
+                <button class="alert-btn" onclick="openModal('available')">
+    Set as Available
+</button>
+
             </div>
         </div>
         <?php endif; ?>
@@ -774,14 +795,16 @@
                                 <td data-label="Action">
                                     <?php if($req['status'] == 'pending'): ?>
                                     <div class="action-btns">
-                                        <a href="index.php?url=process_request&request_id=<?php echo $req['id']; ?>&action=accepted" class="action-btn btn-accept">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                        <button class="action-btn btn-accept"
+                                            onclick="openModal('accept', <?php echo $req['id']; ?>)">
                                             Accept
-                                        </a>
-                                        <a href="index.php?url=process_request&request_id=<?php echo $req['id']; ?>&action=rejected" class="action-btn btn-reject" onclick="return confirm('Are you sure you want to reject this request?')">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                                            Reject
-                                        </a>
+                                        </button>
+
+                                        <button class="action-btn btn-reject"
+        onclick="openModal('reject', <?php echo $req['id']; ?>)">
+    Reject
+</button>
+
                                     </div>
                                     <?php else: ?>
                                     <span class="action-btn btn-done">Completed</span>
@@ -804,6 +827,17 @@
             </div>
         </div>
     </main>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <h3 id="modalTitle"></h3>
+        <p id="modalText"></p>
+
+        <div class="modal-actions">
+            <button class="action-btn btn-done" onclick="closeModal()">Cancel</button>
+            <a id="modalConfirmBtn" class="action-btn btn-accept">Confirm</a>
+        </div>
+    </div>
+</div>
 
     <script>
         // Add smooth hover effects
@@ -815,6 +849,41 @@
                 this.style.transform = 'translateY(0)';
             });
         });
+        const overlay=document.getElementById('modalOverlay');
+const title=document.getElementById('modalTitle');
+const text=document.getElementById('modalText');
+const confirmBtn=document.getElementById('modalConfirmBtn');
+
+function openModal(type,id=null){
+    overlay.style.display='flex';
+
+    if(type==='accept'){
+        title.innerText='Accept Request';
+        text.innerText='Do you want to accept this hire request?';
+        confirmBtn.href=`index.php?url=process_request&request_id=${id}&action=accepted`;
+        confirmBtn.className='action-btn btn-accept';
+    }
+
+    if(type==='reject'){
+        title.innerText='Reject Request';
+        text.innerText='Are you sure you want to reject this request?';
+        confirmBtn.href=`index.php?url=process_request&request_id=${id}&action=rejected`;
+        confirmBtn.className='action-btn btn-reject';
+    }
+
+    if(type==='available'){
+        title.innerText='Set Available';
+        text.innerText='You will be visible to landowners again.';
+        confirmBtn.href='index.php?url=set_available';
+        confirmBtn.className='action-btn btn-accept';
+    }
+}
+
+function closeModal(){
+    overlay.style.display='none';
+}
+
     </script>
+    
 </body>
 </html>
