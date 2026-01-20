@@ -229,7 +229,7 @@
             align-items: center;
             gap: 14px;
             margin-bottom: 36px;
-            text-decoration: none; /* Wrapped logo in anchor tag to redirect to home page */
+            text-decoration: none; 
             cursor: pointer;
         }
 
