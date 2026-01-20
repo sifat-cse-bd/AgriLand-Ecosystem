@@ -825,7 +825,7 @@
 <nav class="navbar">
     <div class="nav-brand">
         <div class="nav-logo">🌾</div>
-        <div class="nav-title">Agri<span>Service</span></div>
+        <div class="nav-title"><span>AgriLand-Ecosystem</span></div>
     </div>
     <div class="nav-right">
         <a href="index.php?url=view_cart" class="btn-cart">
