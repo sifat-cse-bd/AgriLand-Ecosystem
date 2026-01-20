@@ -47,38 +47,55 @@ public function register() {
 
     // --- LOGIN LOGIC ---
     public function login() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            
-            // Input neya
-            $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
-            $password = trim($_POST['password']);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
+        $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+        $password = trim($_POST['password']);
 
-            // Model theke user-ke khuje ber kora ebong password verify kora
-            $loggedInUser = $this->userModel->login($email, $password);
+        // --- STEP 1: PROTHOME ADMIN CHECK (Hardcoded) ---
+        // Jate database-e admin na thakleo login kora jay
+        if ($email === 'admin@gmail.com' && $password === 'admin123') {
+            $_SESSION['user_id'] = 0; 
+            $_SESSION['user_name'] = 'System Admin';
+            $_SESSION['user_role'] = 'admin';
+            header('Location: index.php?url=admin_dashboard');
+            exit();
+        }
 
-            if ($loggedInUser) {
-                // Login successful hole Session create kora
-                $_SESSION['user_id'] = $loggedInUser['id'];
-                $_SESSION['user_name'] = $loggedInUser['full_name'];
-                $_SESSION['user_role'] = $loggedInUser['role'];
-                $_SESSION['user_district'] = $loggedInUser['district'];
-                $_SESSION['user_phone'] = $loggedInUser['phone'];
-                $_SESSION['user_email'] = $loggedInUser['email'];
+        // --- STEP 2: DATABASE CHECK (For Other Roles) ---
+        $loggedInUser = $this->userModel->login($email, $password);
 
-                // Role onujayi specific dashboard-e pathano
-                if($loggedInUser['role'] == 'landowner') {
+        if ($loggedInUser) {
+            // Session-e data set kora
+            $_SESSION['user_id'] = $loggedInUser['id'];
+            $_SESSION['user_name'] = $loggedInUser['full_name'];
+            $_SESSION['user_role'] = $loggedInUser['role'];
+            $_SESSION['user_district'] = $loggedInUser['district'];
+            $_SESSION['user_phone'] = $loggedInUser['phone'];
+            $_SESSION['user_email'] = $loggedInUser['email'];
+
+            // Role onujayi Redirect (Switch use kora aro clean)
+            switch($loggedInUser['role']) {
+                case 'landowner':
                     header('location: index.php?url=landowner_dashboard');
-                } elseif($loggedInUser['role'] == 'farmer') {
+                    break;
+                case 'farmer':
                     header('location: index.php?url=farmer_dashboard');
-                } elseif($loggedInUser['role'] == 'company') {
+                    break;
+                case 'company':
                     header('location: index.php?url=company_dashboard');
-                }
-            } else {
-                // Login fail hole
-                die("Email or Password incorrect! <a href='index.php?url=login'>Try again</a>");
+                    break;
+                default:
+                    header('location: index.php?url=login&error=invalid_role');
             }
+            exit();
+        } else {
+            // Login fail hole alert diye redirect kora bhalo, die() kora noy
+            echo "<script>alert('Invalid Email or Password!'); window.location.href='index.php?url=login';</script>";
+            exit();
         }
     }
+}
 
     //Forget Password Logic
    public function forgotPassword() {
@@ -220,7 +237,7 @@ public function addInstrument() {
         ];
         
         if ($this->userModel->addInstrument($data)) {
-            echo "<script>alert('Instrument Added!'); window.location.href='index.php?url=company_dashboard';</script>";
+            echo "<script> window.location.href='index.php?url=company_dashboard';</script>";
         }
     }
 }
@@ -236,7 +253,8 @@ public function editInstrument() {
             'description' => $_POST['description']
         ];
         if ($this->userModel->updateInstrument($data)) {
-            echo "<script>alert('Updated successfully!'); window.location.href='index.php?url=company_dashboard';</script>";
+            // echo "<script>alert('Updated successfully!'); window.location.href='index.php?url=company_dashboard';</script>";
+            header('location: index.php?url=company_dashboard');
         }
     }
 }
@@ -244,7 +262,8 @@ public function editInstrument() {
 public function deleteInstrument() {
     if (isset($_GET['id']) && $_SESSION['user_role'] == 'company') {
         if ($this->userModel->deleteInstrument($_GET['id'], $_SESSION['user_id'])) {
-            echo "<script>alert('Deleted successfully!'); window.location.href='index.php?url=company_dashboard';</script>";
+            // echo "<script>alert('Deleted successfully!'); window.location.href='index.php?url=company_dashboard';</script>";
+            header('location: index.php?url=company_dashboard');
         }
     }
 }
@@ -320,6 +339,40 @@ public function processFarmerUpdate() {
         }
     }
 }
+
+public function adminDashboard() {
+    // Shudhu admin jate access pay sheta check kora
+    if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+        header('Location: index.php?url=login');
+        exit();
+    }
+
+    // Model theke data niye asha
+    $landowners = $this->userModel->getAllLandowners();
+    $farmers = $this->userModel->getAllFarmersWithProfiles();
+    $companies = $this->userModel->getAllCompanies();
+
+    // View load kora (File path thik thakle dashboard show korbe)
+    require_once '../app/views/admin/dashboard.php';
+}
+
+public function deleteUser() {
+    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id']; // ID integer e convert korun
+            
+            if ($this->userModel->deleteUser($id)) {
+                header("Location: index.php?url=admin_dashboard&status=success");
+                exit();
+            } else {
+                // Ekhane error asha mane deleteUser function false return koreche
+                header("Location: index.php?url=admin_dashboard&status=error");
+                exit();
+            }
+        }
+    }
+}
+
 
     // --- LOGOUT LOGIC ---
     public function logout() {

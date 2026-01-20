@@ -12,7 +12,10 @@
     <header>
         <div class="logo">
             <a href="index.php?url=home">
-                <h2>Agri<span>Service</span></h2>
+              <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+              </div>
+              <h2><span> AgriLand-Ecosystem</span></h2>
             </a>
         </div>
         <nav class="nav-links">
@@ -86,7 +89,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-brand">
-                <h3>AgriService</h3>
+                <h3>AgriLand-Ecosystem</h3>
                 <p>Empowering agricultural communities with digital solutions for a sustainable future.</p>
             </div>
             <div class="contact-info">
@@ -114,9 +117,8 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Agri-Service System. All rights reserved.</p>
+            <p>&copy; 2026 AgriLand-Ecosystem. All rights reserved.</p>
         </div>
     </footer>
-
 </body>
 </html>

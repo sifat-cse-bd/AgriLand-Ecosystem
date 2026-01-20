@@ -49,7 +49,7 @@ public function remove() {
 }
 
 // confirmBuy ebong processRent-eo unset($_SESSION['cart'][$key]) er poriborte 
-// unset($_SESSION['cart'][$id]) use 
+// unset($_SESSION['cart'][$id]) use korben.
 
 // Quantity ekta komanor jonno
 public function decrease_qty() {
@@ -78,24 +78,6 @@ public function increase_qty() {
 }
 
     // 2. Buy Logic
-   public function confirmBuy() {
-        require_once '../app/models/UserModel.php';
-        $userModel = new UserModel();
-        
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $item = $userModel->getInstrumentById($id);
-            
-            if ($userModel->buyInstrument($item['id'], $_SESSION['user_id'], $item['selling_price'])) {
-                // Cart theke remove kora (Key dhore)
-                if (isset($_SESSION['cart'][$id])) {
-                    unset($_SESSION['cart'][$id]);
-                }
-                // echo "<script>alert('Order placed successfully!'); window.location.href='index.php?url=view_cart';</script>";
-                header('location: index.php?url=view_cart');
-            }
-        }
-    }
 
     // 3. Rent Logic (Form dekhano)
     public function rentDetails() {
@@ -105,21 +87,38 @@ public function increase_qty() {
         require_once '../app/views/landowner/rent_form.php';
     }
 
-  public function processRent() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            require_once '../app/models/UserModel.php';
-            $userModel = new UserModel();
-            
-            $id = $_POST['instrument_id'];
-            if ($userModel->saveRentalRequest($id, $_SESSION['user_id'], $_POST['rental_date'])) {
-                // Cart theke remove kora (Key dhore)
-                if (isset($_SESSION['cart'][$id])) {
-                    unset($_SESSION['cart'][$id]);
-                }
-                // echo "<script>alert('Rental Request Sent!'); window.location.href='index.php?url=view_cart';</script>";
-                header('location: index.php?url=view_cart');
-            }
+    // Confirm Buy Logic
+// Purchase Confirm
+public function confirmBuy() {
+    require_once '../app/models/UserModel.php';
+    $userModel = new UserModel();
+    $id = $_GET['id'];
+    $item = $userModel->getInstrumentById($id);
+    
+    // Quantity session theke neya
+    $quantity = isset($_SESSION['cart'][$id]) ? $_SESSION['cart'][$id] : 1; 
+    
+    // Model-er update kora function-ti call kora
+    if ($userModel->buyInstrument($id, $_SESSION['user_id'], $item['selling_price'], $quantity)) {
+        unset($_SESSION['cart'][$id]);
+        header('location: index.php?url=view_cart');
+    }
+}
+
+// Rent Confirm
+public function processRent() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        require_once '../app/models/UserModel.php';
+        $userModel = new UserModel();
+        $id = $_POST['instrument_id'];
+        
+        $quantity = (isset($_SESSION['cart'][$id]) && $_SESSION['cart'][$id] > 0) ? $_SESSION['cart'][$id] : 1; 
+        
+        if ($userModel->saveRentalRequest($id, $_SESSION['user_id'], $_POST['rental_date'], $quantity)) {
+            unset($_SESSION['cart'][$id]);
+            header('location: index.php?url=view_cart');
         }
     }
+}
 
 }
