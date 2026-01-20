@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
    <link rel="stylesheet" href="../../../asset/css/auth/login.css">
+   <link rel="stylesheet" href="<?= BASE_URL ?>asset/css/auth/login.css">
+
 </head>
 <body>
     <!-- Blurred Background -->
@@ -26,7 +28,7 @@
         <!-- Left Side - Welcome Section -->
         <div class="welcome-section">
             <div class="welcome-content">
-                <h1>Welcome to<br>Agri-Service</h1>
+                <h1>Welcome to<br>AgriLand Ecosystem</h1>
                 <p>Your one-stop platform to hire skilled farmers and rent quality agricultural equipment.</p>
                 
                 <div class="features">
