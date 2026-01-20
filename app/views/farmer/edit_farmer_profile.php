@@ -596,8 +596,6 @@
     </div>
 </main>
 
-
-
 <script>
     // Add input focus animations
     document.querySelectorAll('.form-group input').forEach(input => {
