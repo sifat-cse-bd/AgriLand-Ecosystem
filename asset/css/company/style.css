@@ -1,9 +1,4 @@
-
-/* =========================
-   THEME TOKENS (Dark default)
-   ========================= */
 :root{
-  /* Core */
   --bg-0:#070B18;
   --bg-1:#0B1226;
   --bg-2:#0A1B1A;
@@ -18,7 +13,6 @@
   --text:#EAF0FF;
   --muted: rgba(234,240,255,.70);
   --muted-2: rgba(234,240,255,.55);
-
 
   --primary:#22c55e;
   --primary-2:#16a34a;
@@ -35,9 +29,6 @@
   --radius-sm: 12px;
 }
 
-/* =========================
-   Light theme overrides
-   ========================= */
 html[data-theme="light"]{
   --page-bg: #f6f8ff;
 
@@ -47,13 +38,12 @@ html[data-theme="light"]{
   --stroke: rgba(15,23,42,.12);
   --stroke-2: rgba(15,23,42,.16);
 
-  --text: #0f172a;                 
-  --muted: rgba(15,23,42,.72);      
+  --text: #0f172a;
+  --muted: rgba(15,23,42,.72);
   --muted-2: rgba(15,23,42,.58);
 
   --primary: #16a34a;
 
-  /* lighter, realistic shadow on light */
   --shadow: 0 18px 40px rgba(15,23,42,.12);
   --shadow-soft: 0 10px 24px rgba(15,23,42,.10);
 }
@@ -71,7 +61,6 @@ body{
   color: var(--text);
   line-height: 1.6;
 
-
   background:
     radial-gradient(900px 500px at 12% 18%, rgba(34,197,94,.22), transparent 60%),
     radial-gradient(800px 450px at 75% 15%, rgba(56,189,248,.20), transparent 60%),
@@ -79,7 +68,6 @@ body{
     radial-gradient(900px 520px at 20% 85%, rgba(245,158,11,.16), transparent 60%),
     linear-gradient(135deg, var(--bg-0), var(--bg-1));
 }
-
 
 html[data-theme="light"] body{
   background:
@@ -91,7 +79,6 @@ html[data-theme="light"] body{
   color: var(--text);
 }
 
-
 ::-webkit-scrollbar{ width:10px; height:10px; }
 ::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.12); border-radius: 20px; }
 ::-webkit-scrollbar-track{ background: rgba(0,0,0,.25); }
@@ -99,9 +86,6 @@ html[data-theme="light"] body{
 html[data-theme="light"] ::-webkit-scrollbar-thumb{ background: rgba(15,23,42,.18); }
 html[data-theme="light"] ::-webkit-scrollbar-track{ background: rgba(15,23,42,.06); }
 
-/* =========================
-   Navbar
-   ========================= */
 .navbar{
   background: rgba(10,18,38,.55);
   border-bottom: 1px solid var(--stroke);
@@ -118,7 +102,6 @@ html[data-theme="light"] ::-webkit-scrollbar-track{ background: rgba(15,23,42,.0
   box-shadow: 0 8px 30px rgba(0,0,0,.25);
 }
 
-/* Navbar in tokens */
 .navbar{
   background: color-mix(in srgb, var(--surface) 70%, transparent);
   border-bottom: 1px solid var(--stroke);
@@ -175,7 +158,6 @@ html[data-theme="light"] .navbar{
 }
 .nav-links a:hover::after{ width:100%; }
 
-
 .btn-logout{
   background: linear-gradient(135deg, rgba(251,113,133,.95), rgba(220,38,38,.95));
   color: white !important;
@@ -190,16 +172,16 @@ html[data-theme="light"] .navbar{
   box-shadow: 0 14px 34px rgba(220,38,38,.28);
 }
 
-/* =========================
-   Hero
-   ========================= */
 .hero{
-  height: 250px;
+  height: auto;
+  min-height: 260px;
+  padding: 30px 14px 70px;
+
   background:
     radial-gradient(900px 300px at 20% 20%, rgba(34,197,94,.25), transparent 55%),
     radial-gradient(900px 300px at 80% 30%, rgba(56,189,248,.18), transparent 55%),
     linear-gradient(135deg, rgba(7,11,24,.85), rgba(11,18,38,.65)),
-    url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=1920&q=80');
+    url('https://plus.unsplash.com/premium_photo-1733266834957-f5c0152198b5?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   background-size: cover;
   background-position:center;
   display:flex;
@@ -209,7 +191,6 @@ html[data-theme="light"] .navbar{
   text-align:center;
   color: white;
   border-bottom: 1px solid rgba(255,255,255,.08);
-  padding: 18px 14px;
 }
 
 .hero h1{
@@ -235,26 +216,21 @@ html[data-theme="light"] .navbar{
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* =========================
-   Main layout
-   ========================= */
 .main-container{
   max-width: 1300px;
-  margin: -55px auto 50px;
+  margin: -30px auto 50px;
   padding: 0 18px;
   position: relative;
   z-index: 10;
 }
-.main-container{ padding: 0 14px; } /* small screens */
+.main-container{ padding: 0 14px; }
 
-/* top cards */
 .top-section{
   display:flex;
   gap: 20px;
   margin-bottom: 34px;
 }
 
-/* Glass card base */
 .form-section,
 .list-section,
 .orders-table{
@@ -277,7 +253,6 @@ html[data-theme="light"] .navbar{
   padding: 26px;
 }
 
-/* Card headings */
 .form-section h3,
 .list-section h3{
   font-size: 1.2rem;
@@ -296,7 +271,6 @@ html[data-theme="light"] .navbar{
   margin-bottom: 18px;
 }
 
-
 .form-section h3 svg{
   width: 20px;
   height: 20px;
@@ -308,9 +282,6 @@ html[data-theme="light"] .navbar{
   vector-effect: non-scaling-stroke;
 }
 
-/* =========================
-   Inputs
-   ========================= */
 .form-group{ margin-bottom: 14px; }
 .form-group label{
   color: var(--muted);
@@ -355,9 +326,6 @@ html[data-theme="light"] textarea:focus{
 
 textarea{ resize: vertical; min-height: 100px; }
 
-/* =========================
-   Buttons
-   ========================= */
 .btn-post{
   width:100%;
   border: 0;
@@ -381,7 +349,6 @@ textarea{ resize: vertical; min-height: 100px; }
   box-shadow: 0 20px 48px rgba(34,197,94,.28);
 }
 
-/* Edit/Delete */
 .btn-edit{
   background: linear-gradient(135deg, rgba(245,158,11,.95), rgba(251,146,60,.95));
   color: #120b01;
@@ -409,7 +376,6 @@ textarea{ resize: vertical; min-height: 100px; }
 }
 .btn-delete:hover{ transform: translateY(-1px); }
 
-/* Done button */
 .btn-done{
   background: linear-gradient(135deg, rgba(34,197,94,1), rgba(56,189,248,.95));
   color: #071018;
@@ -425,9 +391,6 @@ textarea{ resize: vertical; min-height: 100px; }
 }
 .btn-done:hover{ transform: translateY(-2px); }
 
-/* =========================
-   Tables 
-   ========================= */
 table{
   width:100%;
   border-collapse: collapse;
@@ -485,7 +448,6 @@ html[data-theme="light"] tr:hover{
   text-shadow: 0 10px 22px rgba(34,197,94,.10);
 }
 
-/* Status badges */
 .badge{
   display:inline-flex;
   align-items:center;
@@ -512,13 +474,11 @@ html[data-theme="light"] .badge{
   box-shadow: 0 10px 24px rgba(245,158,11,.08);
 }
 
-/* Empty row */
 .empty-row{
   text-align:center;
   padding: 36px !important;
   color: var(--muted-2);
 }
-
 
 .orders-section{ margin-top: 10px; }
 
@@ -551,7 +511,6 @@ html[data-theme="light"] .section-header{
     linear-gradient(135deg, rgba(245,158,11,.18), rgba(10,18,38,.55));
 }
 
-/* Light versions for headers */
 html[data-theme="light"] .section-header.purchase{
   background:
     radial-gradient(500px 120px at 20% 10%, rgba(56,189,248,.18), transparent 60%),
@@ -569,14 +528,10 @@ html[data-theme="light"] .section-header.rental{
   font-weight: 800;
 }
 
-/* Make orders tables also glass */
 .orders-table{
   overflow: hidden;
 }
 
-/* =========================
-   Modal
-   ========================= */
 .modal{
   display:none;
   position: fixed;
@@ -662,9 +617,6 @@ html[data-theme="light"] .modal-content hr{
   box-shadow: 0 20px 48px rgba(167,139,250,.22);
 }
 
-/* =========================
-   Toggle Button UI
-   ========================= */
 .theme-toggle{
   display: inline-flex;
   align-items: center;
@@ -685,11 +637,6 @@ html[data-theme="light"] .modal-content hr{
 .theme-toggle:hover{ transform: translateY(-1px); }
 .toggle-icon{ font-size: 16px; line-height: 1; }
 
-/* =========================
-   RESPONSIVE 
-   ========================= */
-
-/* 2) Make TOP section responsive using GRID (form + list) */
 .top-section{
   display: grid !important;
   grid-template-columns: minmax(320px, 1fr) minmax(420px, 1.7fr);
@@ -697,7 +644,6 @@ html[data-theme="light"] .modal-content hr{
   align-items: start;
 }
 
-/* 3) Tables: prevent layout breaking on small screens */
 .list-section,
 .orders-table{
   overflow-x: auto;
@@ -708,12 +654,10 @@ html[data-theme="light"] .modal-content hr{
   min-width: 720px;
 }
 
-/* Optional: nicer sticky header feel on mobile scroll */
 .navbar{
   padding: 14px 20px;
 }
 
-/* 4) Navbar responsiveness */
 .nav-links{
   gap: 12px 14px;
   justify-content: flex-end;
@@ -731,18 +675,19 @@ html[data-theme="light"] .modal-content hr{
   }
 }
 
-/* 5) Hero height + text scaling */
-.hero{ height: 220px; }
 @media (max-width: 600px){
-  .hero{ height: 200px; }
+  .hero{
+    min-height: 240px;
+    padding-bottom: 60px;
+  }
   .hero h1{ font-size: 1.55rem; line-height: 1.2; }
   .hero p{ font-size: .95rem; }
+  .main-container{ margin-top: -18px; }
 }
 
-/* 6) Cards padding responsive */
 @media (max-width: 900px){
   .top-section{
-    grid-template-columns: 1fr; /* stack */
+    grid-template-columns: 1fr;
   }
   .form-section,
   .list-section{
@@ -750,20 +695,17 @@ html[data-theme="light"] .modal-content hr{
   }
 }
 
-/* 7) Orders section: spacing */
 .section-header{ padding: 14px 16px; }
 @media (max-width: 600px){
   .section-header h2{ font-size: 1.05rem; }
 }
 
-/* 8) Modal responsiveness */
 .modal-content{
   width: min(560px, 92vw) !important;
   margin: 10vh auto !important;
   padding: 22px !important;
 }
 
-/* 9) Inputs: improve tap targets on mobile */
 @media (max-width: 520px){
   input, textarea{
     padding: 11px 12px;
@@ -775,12 +717,10 @@ html[data-theme="light"] .modal-content hr{
   }
 }
 
-/* 10) Minor: buttons in table shouldn't wrap weirdly */
 td .btn-edit, td .btn-delete, td .btn-done{
   white-space: nowrap;
 }
 
-/* 11) Minor: reduce heavy shadows on very small screens */
 @media (max-width: 480px){
   .form-section, .list-section, .orders-table{
     box-shadow: 0 10px 26px rgba(0,0,0,.25);

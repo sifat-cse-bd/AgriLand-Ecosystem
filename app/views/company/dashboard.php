@@ -4,6 +4,7 @@
     <title>Company Dashboard - Agri Equipment Rentals</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../asset/css/company/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>asset/css/company/style.css">
 </head>
 <body>
 
@@ -13,7 +14,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
         </svg>
-        Agri Rentals
+        AgriLand-Ecosystem
     </div>
     <div class="nav-links">
         <a href="index.php?url=company_dashboard">Dashboard</a>

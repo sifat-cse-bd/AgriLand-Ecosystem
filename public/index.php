@@ -1,4 +1,5 @@
 <?php
+define('BASE_URL', '/AgriLand-Ecosystem/');
 // Session start kora jate login info save thake
 session_start();
 
