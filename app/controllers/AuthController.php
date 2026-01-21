@@ -52,8 +52,7 @@ public function register() {
         $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
         $password = trim($_POST['password']);
 
-        // --- STEP 1: PROTHOME ADMIN CHECK (Hardcoded) ---
-        // Jate database-e admin na thakleo login kora jay
+        
         if ($email === 'admin@gmail.com' && $password === 'admin123') {
             $_SESSION['user_id'] = 0; 
             $_SESSION['user_name'] = 'System Admin';
@@ -110,8 +109,7 @@ public function register() {
             // 2. Save to Database
             $this->userModel->setResetToken($email, $token);
             
-            // 3. Direct Redirect (This bypasses pop-up blockers)
-            // We show a quick alert so you know what's happening, then move the page
+            
             echo "<script>
                 alert('Success! Simulation: Reset link sent to your email. Redirecting you to the reset page now...');
                 window.location.href = 'index.php?url=reset_password&token=" . $token . "';
@@ -172,7 +170,6 @@ public function resetPassword() {
     }
 
     public function handleHireRequest() {
-    // URL theke request_id ebong action (accepted/rejected) nibo
     if (isset($_GET['request_id']) && isset($_GET['action'])) {
         $request_id = $_GET['request_id'];
         $action = $_GET['action'];
@@ -180,13 +177,12 @@ public function resetPassword() {
         // Model use kore hire_requests table-e status update korbo
         if ($this->userModel->updateHireStatus($request_id, $action)) {
             
-            // Jodi farmer request-ti 'accepted' kore, tobe tar availability status 'busy' hobe
             if ($action == 'accepted') {
-                // $_SESSION['user_id'] hocche login kora farmer-er id
+                
                 $this->userModel->updateAvailability($_SESSION['user_id'], 'busy');
             }
 
-            // Success message dekhano
+            
             header("Location: index.php?url=farmer_dashboard");
         } else {
             // Jodi kono karone database error hoy
@@ -308,8 +304,8 @@ public function editFarmerProfile() {
     $userId = $_SESSION['user_id'];
     
     // Task 1: Fetching data from both tables
-    $user = $this->userModel->getUserById($userId); // users table theke
-    $farmer = $this->userModel->getFarmerData($userId); // farmers table theke (Eikhane error ashtilo)
+    $user = $this->userModel->getUserById($userId); 
+    $farmer = $this->userModel->getFarmerData($userId); 
 
     // View file load kora (Project structure onujayi path check korun)
     require_once '../app/views/farmer/edit_farmer_profile.php';

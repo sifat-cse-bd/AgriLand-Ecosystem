@@ -231,8 +231,23 @@ switch($url) {
             $auth = new AuthController();
             $auth->processFarmerUpdate();
         }
-        break;            
+        break; 
 
+    case 'admin_dashboard':
+        // Check jodi admin login kora thake
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+            require_once '../app/controllers/AuthController.php';
+            $auth = new AuthController(); // Ekhane $auth use korun jate error na dey
+            $auth->adminDashboard();
+        } else {
+            header('location: index.php?url=login');
+        }
+        break;
+    case 'delete_user':
+        require_once '../app/controllers/AuthController.php';
+        $auth = new AuthController();
+        $auth->deleteUser(); // Method call nishchit korun
+        break;
     
 
     // --- 404 NOT FOUND ---

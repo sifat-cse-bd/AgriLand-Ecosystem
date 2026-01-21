@@ -266,10 +266,31 @@ public function updateInstrument($data) {
 }
 
 // Instrument delete kora
+// Instrument delete kora (With Foreign Key Handling)
 public function deleteInstrument($id, $company_id) {
-    $query = "DELETE FROM instruments WHERE id = :id AND company_id = :c_id";
-    $stmt = $this->db->prepare($query);
-    return $stmt->execute(['id' => $id, 'c_id' => $company_id]);
+    try {
+        $this->db->beginTransaction();
+
+        
+        $stmt1 = $this->db->prepare("DELETE FROM instrument_purchases WHERE instrument_id = :id");
+        $stmt1->execute(['id' => $id]);
+
+        
+        $stmt2 = $this->db->prepare("DELETE FROM rental_requests WHERE instrument_id = :id");
+        $stmt2->execute(['id' => $id]);
+
+        
+        $query = "DELETE FROM instruments WHERE id = :id AND company_id = :c_id";
+        $stmt3 = $this->db->prepare($query);
+        $result = $stmt3->execute(['id' => $id, 'c_id' => $company_id]);
+
+        $this->db->commit();
+        return $result;
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        
+        return false;
+    }
 }
 
 public function getCartDetails($ids) {
@@ -298,47 +319,49 @@ public function getInstrumentById($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Buy request save kora (purchase_price shoho)
-public function buyInstrument($i_id, $l_id, $price) {
-    $query = "INSERT INTO instrument_purchases (instrument_id, landowner_id, purchase_price, status) 
-              VALUES (?, ?, ?, 'pending')";
-    return $this->db->prepare($query)->execute([$i_id, $l_id, $price]);
+// index.php er $userModel->getCompanyPurchases call-er jonno
+// UserModel.php er Line 330 er dike buyInstrument function-ti eibhabe update korun:
+public function buyInstrument($inst_id, $user_id, $price, $quantity) {
+    // Eikhane ami 'landowner_id' bebohar korchi, karon error bolche 'user_id' nai. 
+    // Apnar table-e jodi 'buyer_id' thake, tahole landowner_id er jaygay sheta likhun.
+    $sql = "INSERT INTO instrument_purchases (instrument_id, landowner_id, purchase_price, quantity, status) 
+            VALUES (?, ?, ?, ?, 'pending')";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([$inst_id, $user_id, $price, $quantity]);
 }
 
-// Rent request save kora
-public function saveRentalRequest($i_id, $l_id, $date) {
-    $query = "INSERT INTO rental_requests (instrument_id, landowner_id, rental_date, status) 
-              VALUES (?, ?, ?, 'pending')";
-    return $this->db->prepare($query)->execute([$i_id, $l_id, $date]);
+// Rental request er jonno ek-i bhabe:
+public function saveRentalRequest($inst_id, $user_id, $date, $quantity) {
+    $sql = "INSERT INTO rental_requests (instrument_id, landowner_id, rental_date, quantity, status) 
+            VALUES (?, ?, ?, ?, 'pending')";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([$inst_id, $user_id, $date, $quantity]);
 }
 
-// Shudhu Buy/Purchase Requests fetch kora
-// Buy/Purchase Requests
-// Shudhu Pending Buy/Purchase Requests
-// Pending Buy Requests with District
-// Pending Purchase Requests
+// Company Dashboard er data fetch korar somoy JOIN query-tao update korte hobe
+// index.php er $userModel->getCompanyPurchases call-er jonno
 public function getCompanyPurchases($company_id) {
-    $query = "SELECT ip.*, i.name as instrument_name, u.full_name as customer_name, u.phone, u.district 
-              FROM instrument_purchases ip
-              JOIN instruments i ON ip.instrument_id = i.id
-              JOIN users u ON ip.landowner_id = u.id
-              WHERE i.company_id = :c_id AND ip.status = 'pending' 
-              ORDER BY ip.created_at DESC";
-    $stmt = $this->db->prepare($query);
-    $stmt->execute(['c_id' => $company_id]);
+    // u.district add kora hoyeche ekhane
+    $sql = "SELECT p.*, i.name as instrument_name, u.full_name as customer_name, u.phone, u.district 
+            FROM instrument_purchases p 
+            JOIN instruments i ON p.instrument_id = i.id 
+            JOIN users u ON p.landowner_id = u.id 
+            WHERE i.company_id = ? AND p.status = 'pending'";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([$company_id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Pending Rental Requests
+// index.php er $userModel->getCompanyRentals call-er jonno
 public function getCompanyRentals($company_id) {
-    $query = "SELECT rr.*, i.name as instrument_name, u.full_name as customer_name, u.phone, u.district, i.rental_price
-              FROM rental_requests rr
-              JOIN instruments i ON rr.instrument_id = i.id
-              JOIN users u ON rr.landowner_id = u.id
-              WHERE i.company_id = :c_id AND rr.status = 'pending'
-              ORDER BY rr.created_at DESC";
-    $stmt = $this->db->prepare($query);
-    $stmt->execute(['c_id' => $company_id]);
+    // u.district add kora hoyeche ekhane
+    $sql = "SELECT r.*, i.name as instrument_name, i.rental_price, u.full_name as customer_name, u.phone, u.district 
+            FROM rental_requests r 
+            JOIN instruments i ON r.instrument_id = i.id 
+            JOIN users u ON r.landowner_id = u.id 
+            WHERE i.company_id = ? AND r.status = 'pending'";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([$company_id]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 // Order status 'completed' kora
@@ -431,5 +454,62 @@ public function updateFarmerProfile($userId, $data) {
         return false;
     }
 }
+
+public function getAllLandowners() {
+    $stmt = $this->db->prepare("SELECT * FROM users WHERE role = 'landowner'");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Farmer profiles ebong Users table join kore fetch kora
+public function getAllFarmersWithProfiles() {
+    // u.email nirdishto bhabe select kora hoyeche
+    $query = "SELECT u.id, u.full_name, u.email, u.district, u.phone, 
+                     fp.skills, fp.experience_years, fp.daily_wage 
+              FROM users u 
+              LEFT JOIN farmer_profiles fp ON u.id = fp.user_id 
+              WHERE u.role = 'farmer'";
+    $stmt = $this->db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Shob Company-der fetch kora
+public function getAllCompanies() {
+    $stmt = $this->db->prepare("SELECT * FROM users WHERE role = 'company'");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+public function deleteUser($id) {
+    try {
+        $this->db->beginTransaction();
+
+        // 1. Farmer profiles delete
+        $this->db->prepare("DELETE FROM farmer_profiles WHERE user_id = :id")->execute(['id' => $id]);
+
+        // 2. Hire requests delete (jodi thake)
+        $this->db->prepare("DELETE FROM hire_requests WHERE farmer_id = :id OR landowner_id = :id")->execute(['id' => $id]);
+
+        // 3. Instrument requests delete
+        $this->db->prepare("DELETE FROM instrument_purchases WHERE landowner_id = :id")->execute(['id' => $id]);
+        $this->db->prepare("DELETE FROM rental_requests WHERE landowner_id = :id")->execute(['id' => $id]);
+
+        // 4. Main User delete
+        $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
+        $result = $stmt->execute(['id' => $id]);
+
+        $this->db->commit();
+        return $result;
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        // Database error check korar jonno nicher line-ti temporary un-comment korun:
+        // die("SQL Error: " . $e->getMessage()); 
+        return false;
+    }
+}
+
 
 }

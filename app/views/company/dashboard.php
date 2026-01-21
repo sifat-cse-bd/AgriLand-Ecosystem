@@ -157,11 +157,7 @@
         <!-- Pending Purchase Orders -->
         <div class="section-header purchase">
             <!-- ✅ Added Purchase Icon (missing part) -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
+            
             <h2>Pending Purchase Orders</h2>
         </div>
 
@@ -205,14 +201,7 @@
 
         <!-- Pending Rental Requests -->
         <div class="section-header rental">
-            <!-- ✅ Added Rental Icon (missing part) -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
-                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
-                <line x1="6" y1="1" x2="6" y2="4"/>
-                <line x1="10" y1="1" x2="10" y2="4"/>
-                <line x1="14" y1="1" x2="14" y2="4"/>
-            </svg>
+            
             <h2>Pending Rental Requests</h2>
         </div>
 
@@ -368,7 +357,7 @@
     });
 </script>
 
-<!-- ✅ Added: Dark/Light Theme Switch Script (missing part) -->
+<!--Added: Dark/Light Theme Switch Script (missing part) -->
 <script>
   (function () {
     const root = document.documentElement;
@@ -378,12 +367,13 @@
 
     if (!btn) return;
 
-    // Load saved theme (default dark)
-    const saved = localStorage.getItem("theme") || "dark";
+    // Load saved theme (default LIGHT)
+    const saved = localStorage.getItem("theme") || "light";
     setTheme(saved);
 
     btn.addEventListener("click", () => {
-      const current = root.getAttribute("data-theme") === "light" ? "light" : "dark";
+      const current =
+        root.getAttribute("data-theme") === "light" ? "light" : "dark";
       const next = current === "light" ? "dark" : "light";
       setTheme(next);
       localStorage.setItem("theme", next);
@@ -402,6 +392,7 @@
     }
   })();
 </script>
+
 
 <!-- Delete Modal -->
 <div class="action-modal" id="deleteModal">
