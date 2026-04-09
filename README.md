@@ -68,3 +68,46 @@ The system allows digital management of agricultural activities, equipment renta
 📄 License
 This project is developed for academic purposes as part of the Web Technology course.
 
+## Run Locally (XAMPP)
+
+1. Copy/move the project to:
+	 - `xampp/htdocs/Projects/AgriLand_Ecosystem`
+2. Start `Apache` and `MySQL` from XAMPP Control Panel.
+3. Open this URL in browser:
+	 - `http://localhost/Projects/AgriLand_Ecosystem/`
+
+## Database Setup
+
+This app uses the following DB config in `app/core/Database.php`:
+
+- host: `localhost`
+- database: `agri_db`
+- user: `root`
+- password: `` (empty)
+
+Create database `agri_db` in phpMyAdmin and import your project SQL schema/data.
+
+## Common Issues
+
+- `404 Not Found`
+	- Check project path is exactly inside `htdocs/Projects/AgriLand_Ecosystem`.
+	- Use `http://localhost/Projects/AgriLand_Ecosystem/` (not a file path).
+
+- `Connection error: SQLSTATE...`
+	- MySQL is not running, DB name is wrong, or schema is not imported.
+
+- `SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it`
+	- MySQL is not listening on the configured port.
+	- Open XAMPP Control Panel and start `MySQL`.
+	- If your MySQL runs on a different port (example `3307`), set env vars before Apache startup:
+		- `DB_HOST` (default: `localhost`)
+		- `DB_PORT` (default: `3306`)
+		- `DB_NAME` (default: `agri_db`)
+		- `DB_USER` (default: `root`)
+		- `DB_PASS` (default: empty)
+
+- `php is not recognized` in terminal
+	- This only affects CLI commands.
+	- Browser app via XAMPP Apache can still run.
+	- Optional: add `C:\xampp\php` to system `PATH` for terminal PHP commands.
+

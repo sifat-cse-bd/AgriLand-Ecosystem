@@ -5,8 +5,12 @@ class UserModel {
     private $db;
 
     public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
+        try {
+            $database = new Database();
+            $this->db = $database->getConnection();
+        } catch (RuntimeException $e) {
+            die('<h2>Database is not available</h2><p>' . htmlspecialchars($e->getMessage()) . '</p>');
+        }
     }
 
     // Email check korar jonno (Registration o Login duitar jonnoi lage)

@@ -6,7 +6,7 @@
     <title>User Registration-AgriLand Ecosystem</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../asset/css/auth/style.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>asset/css/auth/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/asset/css/auth/style.css">
 </head>
 <body>
     <div class="floating-shape shape-1"></div>
